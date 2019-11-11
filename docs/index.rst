@@ -20,6 +20,7 @@
     architecture/infrastructure.rst
     architecture/application.rst
     migrating.rst
+    upgrade-marshmallow.rst
     orcid-login.rst
     history.rst
     releases/index.rst

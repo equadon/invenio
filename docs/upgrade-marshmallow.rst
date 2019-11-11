@@ -1,12 +1,12 @@
-Marshmallow migration to version 3
-==================================
+Marshmallow v3 compatibility
+============================
 
 Marshmallow
 -----------
 
 Marhsmallow is a package for serialization and deserialization of complex data
 structures from and to Python types. You can discover its usage within
-Invenio in the `documentation <https://invenio.readthedocs.io/en/latest/tutorials/understanding-data-models.html?highlight=marshmallow#define-a-marshmallow-schema>`_
+Invenio in the `documentation <https://invenio.readthedocs.io/en/latest/tutorials/understanding-data-models.html?highlight=marshmallow#define-a-marshmallow-schema>`_.
 
 
 Compatibility of v2 and v3
@@ -15,22 +15,24 @@ Compatibility of v2 and v3
 If you are using or you are about to use Marshmallow in your repository
 implementation, you should know that the package is about to be upgraded
 to version 3.x. There have been significant changes in the code which will
-influence already existing code, and you should be aware of them.
+influence already existing code and you should be aware of them.
 
-> The full guide is available in the Marshmallow `documentation <https://invenio.readthedocs.io/en/latest/tutorials/understanding-data-models.html?highlight=marshmallow#define-a-marshmallow-schema>`_.
+.. note::
+
+    The full guide is available in the Marshmallow `documentation <https://invenio.readthedocs.io/en/latest/tutorials/understanding-data-models.html?highlight=marshmallow#define-a-marshmallow-schema>`_.
 
 
 We are upgrading the Invenio modules to be compatible with Marshmallow v3.x.
-**We will provide transition period in which the modules will support both
+**We will provide a transition period in which modules will support both
 v2.3.x and v3.x implementations of Marshmallow**.
 Deprecated methods will be marked with warnings to provide you with
 time to adjust your code to the latest changes.
 
 
 There are two options you could follow if you are using
-schemas from marshmallow 2:
+schemas from Marshmallow 2:
 
-1. Stay with Marshmallow 2 for now by pining marshmallow version
+1. Stay with Marshmallow 2 for now by pinning the Marshmallow version
 in your instance.
 
 2. Upgrade to Marshmallow 3. Follow the guide below and the Marshmallow
@@ -41,11 +43,11 @@ Guide
 -----
 
 After upgrading Marshmallow 3 in your dependencies you might find some of your
-code failing. Mostly it will be connected with schema validation and `webargs <https://webargs.readthedocs.io/en/latest/quickstart.html>`_
+code failing. Mostly it will be connected with schema validation and the `webargs <https://webargs.readthedocs.io/en/latest/quickstart.html>`_
 package. Webargs in version 5.4.0 is compatible with Marshmallow 3.x.
 
-The biggest change is the return type of ``Schema().dump()``
-and ``Schema().load()`` (also ``dumps`` and ``loads``.
+The biggest change is the return type of ``Schema().dump()``,
+``Schema().load()``, ``Schema().dumps()`` and ``Schema().loads()``.
 They do not return the ``(data, errors)`` named tuple
 and the ``ValidationError`` is raised instead.
 In this case if you were using ``.errors`` attribute, it will no longer work
@@ -65,9 +67,9 @@ Other significant changes and solutions:
   of the field in the data.
 
 - ``Not a valid type.`` indicates that the field has data of
-  different type than defined in the schema
+  a different type than defined in the schema.
 
-- ``Missing field.`` indicates that field defined as required
+- ``Missing field.`` indicates that a field defined as required
   is missing from the data.
 - ``JSON object has no attribute data``
   Marshmallow schema provides methods ``.dump(..)``, ``.dumps(..)``
@@ -75,22 +77,18 @@ Other significant changes and solutions:
   They return json object only (formerly ``data``). All the errors
   are raised, not returned.
 
-- Your test data is not read properly with using webargs.
-   You are probably using old parameters when initialising the arguments.
+- If your test data is not read properly when using webargs you are probably
+  using old parameters when initialising the arguments.
 
 .. code-block:: python
 
-       'part_number': fields.Int(
+    'part_number': fields.Int(
         load_from='partNumber',
         location='query',
         required=True,
     ),
 
+Change all ``load_from`` and ``dump_to`` to ``data_key``.
 
-change all ``load_from`` and ``dump_to`` to ``data_key``.
-
-
-
-
-
-
+The full list of Marshmallow v3 changes can be found in the Marshmallow
+`upgrade guide <https://marshmallow.readthedocs.io/en/stable/upgrading.html>`_.
